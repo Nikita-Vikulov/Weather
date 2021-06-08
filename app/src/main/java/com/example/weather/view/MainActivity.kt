@@ -1,12 +1,9 @@
 package com.example.weather.view
 
 import android.os.Bundle
-import android.view.View.inflate
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ColorStateListInflaterCompat.inflate
 import com.example.weather.R
-import com.example.weather.databinding.MainActivityBinding.inflate
-import com.example.weather.databinding.MainFragmentBinding.inflate
+import com.example.weather.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
 
