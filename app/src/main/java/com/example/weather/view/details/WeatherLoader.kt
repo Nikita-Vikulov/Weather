@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Handler
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.example.weather.BuildConfig
 import com.example.weather.WeatherDTO
 import com.google.gson.Gson
 import java.io.BufferedReader
@@ -14,7 +15,7 @@ import java.net.URL
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
-private const val YOUR_API_KEY = "2bf915d5-2946-4b92-bd84-fdf2abd84998"
+const val WEATHER_API_KEY = "2bf915d5-2946-4b92-bd84-fdf2abd84998"
 
 @RequiresApi(Build.VERSION_CODES.N)
 class WeatherLoader(private val listener: WeatherLoaderListener, private val lat: Double, private val lon: Double) {
@@ -32,7 +33,7 @@ class WeatherLoader(private val listener: WeatherLoaderListener, private val lat
                     urlConnection.requestMethod = "GET"
                     urlConnection.addRequestProperty(
                         "X-Yandex-API-Key",
-                        YOUR_API_KEY
+                        WEATHER_API_KEY
                     )
                     urlConnection.readTimeout = 10000
                     val bufferedReader =
