@@ -1,4 +1,4 @@
-package com.example.weather
+package com.example.weather.model
 
 data class WeatherDTO (
     val fact: FactDTO?
@@ -7,5 +7,8 @@ data class WeatherDTO (
 data class FactDTO(
     val temp:Int?,
     val feels_like:Int?,
-    val condition: String?
+    val condition: String?,
+    val icon: String?
 )
+
+

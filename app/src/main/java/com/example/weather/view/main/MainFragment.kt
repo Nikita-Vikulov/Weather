@@ -1,5 +1,6 @@
 package com.example.weather.view.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentMainBinding
 import com.example.weather.model.Weather
+import com.example.weather.utils.showSnackBar
 import com.example.weather.view.details.DetailsFragment
 import com.example.weather.viewmodel.AppState
 import com.example.weather.viewmodel.MainViewModel
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {
@@ -70,6 +71,7 @@ class MainFragment : Fragment() {
             mainFragmentFAB.setImageResource(R.drawable.ic_russia)
         }.also { isDataSetRus = !isDataSetRus }
 
+    @SuppressLint("StringFormatInvalid")
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
@@ -87,15 +89,6 @@ class MainFragment : Fragment() {
                     { viewModel.getWeatherFromLocalSourceRus() })
             }
         }
-    }
-
-    private fun View.showSnackBar(
-        text: String,
-        actionText: String,
-        action: (View) -> Unit,
-        length: Int = Snackbar.LENGTH_INDEFINITE
-    ) {
-        Snackbar.make(this, text, length).setAction(actionText, action).show()
     }
 
     interface OnItemViewClickListener {
