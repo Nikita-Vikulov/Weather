@@ -1,6 +1,5 @@
 package com.example.weather.view.details
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,13 +10,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentDetailsBinding
+import com.example.weather.model.City
 import com.example.weather.model.Weather
+import com.example.weather.utils.showSnackBar
 import com.example.weather.viewmodel.AppState
 import com.example.weather.viewmodel.DetailsViewModel
-import com.example.weather.utils.showSnackBar
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_details.*
-import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 
 const val DETAILS_INTENT_FILTER = "DETAILS INTENT FILTER"
 const val DETAILS_LOAD_RESULT_EXTRA = "LOAD RESULT"
@@ -84,6 +84,7 @@ class DetailsFragment : Fragment() {
 
     private fun setWeather(weather: Weather) {
         val city = weatherBundle.city
+        saveCity(city, weather)
         binding.cityName.text = city.city
         binding.cityCoordinates.text = String.format(
             getString(R.string.city_coordinates),
@@ -109,12 +110,10 @@ class DetailsFragment : Fragment() {
 
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 
     companion object {
 
@@ -125,10 +124,20 @@ class DetailsFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
+    }
 
-        private const val MAIN_LINK = "https://api.weather.yandex.ru/v2/informers?"
-        private const val PROCESS_ERROR = "Обработка ошибки"
-        private const val REQUEST_API_KEY = "X-Yandex-API-Key"
+    private fun saveCity(
+        city: City,
+        weather: Weather,
+    ) {
+        viewModel.saveCityToDB(
+            Weather(
+                city,
+                weather.temperature,
+                weather.feelsLike,
+                weather.condition
+            )
+        )
     }
 }
 

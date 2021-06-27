@@ -1,6 +1,5 @@
 package com.example.weather.view.main
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -51,7 +50,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.getRoot()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,7 +70,6 @@ class MainFragment : Fragment() {
             mainFragmentFAB.setImageResource(R.drawable.ic_russia)
         }.also { isDataSetRus = !isDataSetRus }
 
-    @SuppressLint("StringFormatInvalid")
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {

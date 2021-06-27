@@ -20,7 +20,6 @@ private const val REQUEST_GET = "GET"
 private const val REQUEST_TIMEOUT = 10000
 private const val REQUEST_API_KEY = "X-Yandex-API-Key"
 
-
 class DetailsService(name: String = "DetailService") : IntentService(name) {
 
     private val broadcastIntent = Intent(DETAILS_INTENT_FILTER)
@@ -122,7 +121,6 @@ class DetailsService(name: String = "DetailService") : IntentService(name) {
 
     private fun putLoadResult(result: String) {
         broadcastIntent.putExtra(DETAILS_LOAD_RESULT_EXTRA, result)
-
     }
 }
 

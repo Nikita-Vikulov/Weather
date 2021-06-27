@@ -6,4 +6,8 @@
     <string name="error">Error</string>
     <string name="reload">Reload</string>
     <string name="service_broadcast">service_broadcast</string>
+    <string name="content_provider">Content provider</string>
+    <string name="authorities">geekbrains.provider</string>
+    <string name="menu_title_history">history</string>
+    <string name="menu_note">menu_note</string>
 </resources>
