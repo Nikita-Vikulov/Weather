@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.weather">
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -20,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".view.experiments.MainService" />
+       <!-- <service android:name=".view.experiments.MainService" />-->
         <service android:name=".view.details.DetailsService" />
         <receiver android:name=".view.MainBroadcastReceiver">
             <intent-filter>
