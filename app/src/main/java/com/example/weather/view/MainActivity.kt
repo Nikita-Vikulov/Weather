@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.example.weather.GoogleMaps.GoogleMapsFragment
 import com.example.weather.R
 import com.example.weather.databinding.MainActivityBinding
 import com.example.weather.experiments.ContentProviderFragment
@@ -39,6 +40,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.menu_google_maps -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .add(R.id.container, GoogleMapsFragment())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
             R.id.menu_history -> {
                 supportFragmentManager.apply {
                     beginTransaction()
