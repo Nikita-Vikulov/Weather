@@ -28,4 +28,5 @@
     <string name="button_search_map">Search</string>
     <string name="marker_start">Start</string>
     <string name="msg_token_fmt">token</string>
+    <string name="google_maps_key">google_maps_key</string>
 </resources>
