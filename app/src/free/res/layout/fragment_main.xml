@@ -26,9 +26,11 @@
 
     <include
         android:id="@+id/includedLoadingLayout"
-        layout="@layout/loading_layout" />
+        layout="@layout/loading_layout"
+        android:visibility="visible"
+        />
 
-    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/mainFragmentFABLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,6 +39,6 @@
         android:src="@android:drawable/ic_dialog_map"
         app:layout_constraintBottom_toTopOf="@+id/mainFragmentFAB"
         app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="@dimen/fab_location_icon_size" />-->
+        app:maxImageSize="@dimen/fab_location_icon_size" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

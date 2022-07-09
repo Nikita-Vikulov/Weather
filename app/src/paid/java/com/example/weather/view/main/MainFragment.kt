@@ -26,7 +26,6 @@ import com.example.weather.utils.showSnackBar
 import com.example.weather.view.details.DetailsFragment
 import com.example.weather.viewmodel.AppState
 import com.example.weather.viewmodel.MainViewModel
-import kotlinx.android.synthetic.main.fragment_main.*
 import java.io.IOException
 import java.security.AccessController.checkPermission
 
@@ -98,10 +97,10 @@ class MainFragment : Fragment() {
     private fun changeWeatherDataSet() =
         if (isDataSetRus) {
             viewModel.getWeatherFromLocalSourceWorld()
-            mainFragmentFAB.setImageResource(R.drawable.ic_earth)
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
         } else {
             viewModel.getWeatherFromLocalSourceRus()
-            mainFragmentFAB.setImageResource(R.drawable.ic_russia)
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
         }.also { isDataSetRus = !isDataSetRus }
 
     private fun renderData(appState: AppState) {
@@ -278,7 +277,7 @@ class MainFragment : Fragment() {
                     location.longitude,
                     1
                 )
-                mainFragmentFAB.post {
+                binding.mainFragmentFAB.post {
                     showAddressDialog(addresses[0].getAddressLine(0), location)
                 }
             } catch (e: IOException) {

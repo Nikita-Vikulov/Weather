@@ -17,7 +17,6 @@ import com.example.weather.viewmodel.AppState
 import com.example.weather.viewmodel.DetailsViewModel
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_details.*
 
 const val DETAILS_INTENT_FILTER = "DETAILS INTENT FILTER"
 const val DETAILS_LOAD_RESULT_EXTRA = "LOAD RESULT"
@@ -99,14 +98,14 @@ class DetailsFragment : Fragment() {
             GlideToVectorYou.justLoadImage(
                 activity,
                 Uri.parse("https://yastatic.net/weather/i/icons/blueye/color/svg/${it}.svg"),
-                weatherIcon
+                binding.weatherIcon
             )
         }
 
         Picasso
             .get()
             .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
-            .into(headerIcon)
+            .into(binding.headerIcon)
 
     }
 

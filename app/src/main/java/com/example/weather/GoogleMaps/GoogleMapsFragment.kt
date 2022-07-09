@@ -18,7 +18,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import kotlinx.android.synthetic.main.fragment_google_maps_main.*
 import java.io.IOException
 
 class GoogleMapsFragment : Fragment() {
@@ -65,7 +64,7 @@ class GoogleMapsFragment : Fragment() {
                 try {
                     val addresses =
                         geoCoder.getFromLocation(location.latitude, location.longitude, 1)
-                    textAddress.post { textAddress.text = addresses[0].getAddressLine(0) }
+                    binding.textAddress.post { binding.textAddress.text = addresses[0].getAddressLine(0) }
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -88,7 +87,7 @@ class GoogleMapsFragment : Fragment() {
                 .position(location)
                 .title(searchText)
                 .icon(BitmapDescriptorFactory.fromResource(resourceId))
-        )
+        )!!
     }
 
 
@@ -109,7 +108,7 @@ class GoogleMapsFragment : Fragment() {
     private fun initSearchByAddress() {
         binding.buttonSearch.setOnClickListener {
             val geoCoder = Geocoder(it.context)
-            val searchText = searchAddress.text.toString()
+            val searchText = binding.searchAddress.text.toString()
             Thread {
                 try {
                     val addresses = geoCoder.getFromLocationName(searchText, 1)
