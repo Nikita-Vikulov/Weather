@@ -56,9 +56,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
 
-    override fun onNewToken(token: String) {
-
-    }
+    override fun onNewToken(token: String) {}
 
     companion object {
         private const val PUSH_KEY_TITLE = "title"

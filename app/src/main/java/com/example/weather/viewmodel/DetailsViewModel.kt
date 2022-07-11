@@ -50,7 +50,7 @@ class DetailsViewModel(
 
         private fun checkResponse(serverResponse: WeatherDTO): AppState {
             val fact = serverResponse.fact
-            return if (fact == null || fact.temp == null || fact.feels_like == null || fact.condition.isNullOrEmpty()) {
+            return if (fact?.temp == null || fact.feels_like == null || fact.condition.isNullOrEmpty()) {
                 AppState.Error(Throwable(CORRUPTED_DATA))
             } else {
                 AppState.Success(convertDtoToModel(serverResponse))

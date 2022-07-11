@@ -1,4 +1,4 @@
-package com.example.weather.GoogleMaps
+package com.example.weather.maps
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -150,10 +150,6 @@ class GoogleMapsFragment : Fragment() {
             googleMap.isMyLocationEnabled = isPermissionGranted
             googleMap.uiSettings.isMyLocationButtonEnabled = isPermissionGranted
         }
-        //Получить разрешение, если его нет
     }
 
-    companion object {
-        fun newInstance() = GoogleMapsFragment()
-    }
 }

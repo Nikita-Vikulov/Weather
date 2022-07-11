@@ -18,19 +18,6 @@ import com.example.weather.viewmodel.DetailsViewModel
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import com.squareup.picasso.Picasso
 
-const val DETAILS_INTENT_FILTER = "DETAILS INTENT FILTER"
-const val DETAILS_LOAD_RESULT_EXTRA = "LOAD RESULT"
-const val DETAILS_INTENT_EMPTY_EXTRA = "INTENT IS EMPTY"
-const val DETAILS_DATA_EMPTY_EXTRA = "DATA IS EMPTY"
-const val DETAILS_RESPONSE_EMPTY_EXTRA = "RESPONSE IS EMPTY"
-const val DETAILS_REQUEST_ERROR_EXTRA = "REQUEST ERROR"
-const val DETAILS_REQUEST_ERROR_MESSAGE_EXTRA = "REQUEST ERROR MESSAGE"
-const val DETAILS_URL_MALFORMED_EXTRA = "URL MALFORMED"
-const val DETAILS_RESPONSE_SUCCESS_EXTRA = "RESPONSE SUCCESS"
-const val DETAILS_TEMP_EXTRA = "TEMPERATURE"
-const val DETAILS_FEELS_LIKE_EXTRA = "FEELS LIKE"
-const val DETAILS_CONDITION_EXTRA = "CONDITION"
-
 class DetailsFragment : Fragment() {
 
     private var _binding: FragmentDetailsBinding? = null
@@ -45,12 +32,12 @@ class DetailsFragment : Fragment() {
         return binding.root
     }
 
-    private val viewModel: DetailsViewModel by lazy { ViewModelProvider(this).get(DetailsViewModel::class.java) }
+    private val viewModel: DetailsViewModel by lazy { ViewModelProvider(this)[DetailsViewModel::class.java] }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         weatherBundle = arguments?.getParcelable(BUNDLE_EXTRA) ?: Weather()
-        viewModel.detailsLiveData.observe(viewLifecycleOwner, Observer { renderData(it) })
+        viewModel.detailsLiveData.observe(viewLifecycleOwner) { renderData(it) }
         viewModel.getWeatherFromRemoteSource(weatherBundle.city.lat, weatherBundle.city.lon)
     }
 
@@ -106,7 +93,6 @@ class DetailsFragment : Fragment() {
             .get()
             .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
             .into(binding.headerIcon)
-
     }
 
     override fun onDestroyView() {

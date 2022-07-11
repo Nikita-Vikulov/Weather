@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "45420640908",
-    "project_id": "silicon-vista-318422",
-    "storage_bucket": "silicon-vista-318422.appspot.com"
+    "project_number": "256815742744",
+    "project_id": "weather-60041",
+    "storage_bucket": "weather-60041.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:45420640908:android:89f64c358cba4cf2fc19a9",
+        "mobilesdk_app_id": "1:256815742744:android:bbc3d70e1ea6c75685a86d",
         "android_client_info": {
           "package_name": "com.example.weather"
         }
       },
       "oauth_client": [
         {
-          "client_id": "45420640908-ic4qfbm83cpdre3ehba6aq142e3g2jko.apps.googleusercontent.com",
+          "client_id": "256815742744-g2dlvmh73vrf0d9orhnnuco60g23gv1n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.weather",
+            "certificate_hash": "d8c11b99bd3532d4ee8c878949749c0352e5f7eb"
+          }
+        },
+        {
+          "client_id": "256815742744-2qsd3e91rmsp5e8s3q7lesatct1ppmuu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDHBo-XenK10_umyGw9CBPFMxd8IrRQha0"
+          "current_key": "AIzaSyDpes6i5E_vJar58Zm0MLJG1BQah8HdskY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "45420640908-ic4qfbm83cpdre3ehba6aq142e3g2jko.apps.googleusercontent.com",
+              "client_id": "256815742744-2qsd3e91rmsp5e8s3q7lesatct1ppmuu.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
