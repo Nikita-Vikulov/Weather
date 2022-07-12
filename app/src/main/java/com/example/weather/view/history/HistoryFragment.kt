@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentHistoryBinding
@@ -31,7 +30,7 @@ class HistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.historyFragmentRecyclerview.adapter = adapter
-        viewModel.historyLiveData.observe(viewLifecycleOwner, Observer { renderData(it) })
+        viewModel.historyLiveData.observe(viewLifecycleOwner) { renderData(it) }
         viewModel.getAllHistory()
     }
 

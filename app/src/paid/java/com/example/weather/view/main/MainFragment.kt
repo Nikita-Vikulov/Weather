@@ -106,7 +106,6 @@ class MainFragment : Fragment() {
         if (isDataSetRus) {
             viewModel.getWeatherFromLocalSourceRus()
             binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
-
         } else {
             viewModel.getWeatherFromLocalSourceWorld()
             binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
@@ -132,7 +131,7 @@ class MainFragment : Fragment() {
                 adapter.setWeather(appState.weatherData)
             }
             is AppState.Loading -> {
-                binding.includedLoadingLayout.loadingLayout.visibility = View.GONE
+                binding.includedLoadingLayout.loadingLayout.visibility = View.VISIBLE
             }
             is AppState.Error -> {
                 binding.includedLoadingLayout.loadingLayout.visibility = View.GONE
@@ -183,6 +182,7 @@ class MainFragment : Fragment() {
         )
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>, grantResults: IntArray,
@@ -242,7 +242,7 @@ class MainFragment : Fragment() {
                     context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    val provider = locationManager.getProvider(LocationManager.GPS_PROVIDER)
+                    val provider = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                     provider?.let {
 
                         locationManager.requestLocationUpdates(
@@ -282,7 +282,7 @@ class MainFragment : Fragment() {
             }
         }
 
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+      //  override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
         override fun onProviderDisabled(provider: String) {}
     }
@@ -334,8 +334,12 @@ class MainFragment : Fragment() {
         fun onItemViewClick(weather: Weather)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     companion object {
-        fun newInstance() =
-            MainFragment()
+        fun newInstance() = MainFragment()
     }
 }

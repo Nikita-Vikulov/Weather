@@ -1,9 +1,8 @@
 package com.example.weather.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
+@kotlinx.parcelize.Parcelize
 data class Weather(
     val city: City = getDefaultCity(),
     val temperature: Int = 0,

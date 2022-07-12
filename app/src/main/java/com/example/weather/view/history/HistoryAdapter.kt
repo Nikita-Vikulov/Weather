@@ -14,6 +14,7 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.RecyclerItemViewHolde
 
     private var data: List<Weather> = arrayListOf()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(data: List<Weather>) {
         this.data = data
         notifyDataSetChanged()
