@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentMainBinding
-import com.example.weather.experiments.REQUEST_CODE
 import com.example.weather.model.City
 import com.example.weather.model.Weather
 import com.example.weather.utils.showSnackBar
@@ -29,12 +28,13 @@ import java.io.IOException
 private const val IS_WORLD_KEY = "LIST_OF_TOWNS_KEY"
 private const val REFRESH_PERIOD = 60000L
 private const val MINIMAL_DISTANCE = 100f
+const val REQUEST_CODE = 42
 
 class MainFragment : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
-    private var isDataSetRus: Boolean = true
+    private var isDataSetWorld: Boolean = false
 
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this)[MainViewModel::class.java]
@@ -103,22 +103,21 @@ class MainFragment : Fragment() {
     }
 
     private fun changeWeatherDataSet() {
-        if (isDataSetRus) {
+        if (isDataSetWorld) {
             viewModel.getWeatherFromLocalSourceRus()
             binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
         } else {
             viewModel.getWeatherFromLocalSourceWorld()
             binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
         }
-        isDataSetRus = !isDataSetRus
-
-        saveListOfTowns(isDataSetRus)
+        isDataSetWorld = !isDataSetWorld
+        saveListOfTowns(isDataSetWorld)
     }
 
-    private fun saveListOfTowns(isDataSetRus: Boolean) {
+    private fun saveListOfTowns(isDataSetWorld: Boolean) {
         activity?.let {
             with(it.getPreferences(Context.MODE_PRIVATE).edit()) {
-                putBoolean(IS_WORLD_KEY, isDataSetRus)
+                putBoolean(IS_WORLD_KEY, isDataSetWorld)
                 apply()
             }
         }
@@ -182,7 +181,6 @@ class MainFragment : Fragment() {
         )
     }
 
-    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>, grantResults: IntArray,
@@ -282,7 +280,7 @@ class MainFragment : Fragment() {
             }
         }
 
-      //  override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
         override fun onProviderDisabled(provider: String) {}
     }

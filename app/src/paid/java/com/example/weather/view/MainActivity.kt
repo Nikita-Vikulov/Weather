@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.weather.maps.GoogleMapsFragment
 import com.example.weather.R
 import com.example.weather.databinding.MainActivityBinding
-import com.example.weather.experiments.ContentProviderFragment
 import com.example.weather.view.history.HistoryFragment
 import com.example.weather.view.main.MainFragment
 
@@ -58,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
-            R.id.menu_content_provider -> {
+            /*R.id.menu_content_provider -> {
                 supportFragmentManager.apply {
                     beginTransaction()
                         .add(R.id.container, ContentProviderFragment.newInstance())
@@ -66,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                         .commitAllowingStateLoss()
                 }
                 true
-            }
+            }*/
             else -> super.onOptionsItemSelected(item)
         }
     }
