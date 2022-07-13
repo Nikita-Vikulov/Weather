@@ -12,7 +12,7 @@ import com.example.weather.databinding.FragmentDetailsBinding
 import com.example.weather.model.City
 import com.example.weather.model.Weather
 import com.example.weather.utils.showSnackBar
-import com.example.weather.viewmodel.AppState
+import com.example.weather.app.AppState
 import com.example.weather.viewmodel.DetailsViewModel
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import com.squareup.picasso.Picasso

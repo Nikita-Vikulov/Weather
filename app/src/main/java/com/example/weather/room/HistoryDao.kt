@@ -1,7 +1,6 @@
 package com.example.weather.room
 
 import androidx.room.*
-import com.example.weather.model.City
 
 @Dao
 

@@ -21,7 +21,7 @@ import com.example.weather.model.City
 import com.example.weather.model.Weather
 import com.example.weather.utils.showSnackBar
 import com.example.weather.view.details.DetailsFragment
-import com.example.weather.viewmodel.AppState
+import com.example.weather.app.AppState
 import com.example.weather.viewmodel.MainViewModel
 import java.io.IOException
 
