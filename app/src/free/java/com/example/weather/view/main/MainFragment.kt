@@ -12,41 +12,40 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.motion.widget.Debug.getLocation
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
+import com.example.weather.app.AppState
 import com.example.weather.databinding.FragmentMainBinding
-import com.example.weather.experiments.REQUEST_CODE
 import com.example.weather.model.City
 import com.example.weather.model.Weather
 import com.example.weather.utils.showSnackBar
 import com.example.weather.view.details.DetailsFragment
-import com.example.weather.viewmodel.AppState
 import com.example.weather.viewmodel.MainViewModel
 import java.io.IOException
-import java.security.AccessController.checkPermission
 
+private const val IS_WORLD_KEY = "LIST_OF_TOWNS_KEY"
 private const val REFRESH_PERIOD = 60000L
 private const val MINIMAL_DISTANCE = 100f
+const val REQUEST_CODE = 42
 
 class MainFragment : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
+    private var isDataSetWorld: Boolean = false
 
     private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java)
+        ViewModelProvider(this)[MainViewModel::class.java]
     }
 
-    private var isDataSetRus: Boolean = true
     private val adapter = MainFragmentAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
             activity?.supportFragmentManager?.apply {
                 beginTransaction()
-                    .replace( //add
+                    .replace(
                         R.id.container, DetailsFragment.newInstance(Bundle().apply
                         { putParcelable(DetailsFragment.BUNDLE_EXTRA, weather) })
                     )
@@ -57,7 +56,7 @@ class MainFragment : Fragment() {
     })
 
     private fun openDetailsFragment(
-        weather: Weather
+        weather: Weather,
     ) {
         activity?.supportFragmentManager?.apply {
             beginTransaction()
@@ -79,7 +78,7 @@ class MainFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
@@ -89,28 +88,49 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.mainFragmentRecyclerView.adapter = adapter
         binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
-       // binding.mainFragmentFABLocation.setOnClickListener { checkPermission() }
-        viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) })
-        viewModel.getWeatherFromLocalSourceRus()
+        viewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
+        showListOfTowns()
     }
 
-    private fun changeWeatherDataSet() =
-        if (isDataSetRus) {
-            viewModel.getWeatherFromLocalSourceWorld()
-            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
-        } else {
+    private fun showListOfTowns() {
+        activity?.let {
+            if (it.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WORLD_KEY, false)) {
+                changeWeatherDataSet()
+            } else {
+                viewModel.getWeatherFromLocalSourceRus()
+            }
+        }
+    }
+
+    private fun changeWeatherDataSet() {
+        if (isDataSetWorld) {
             viewModel.getWeatherFromLocalSourceRus()
             binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
-        }.also { isDataSetRus = !isDataSetRus }
+        } else {
+            viewModel.getWeatherFromLocalSourceWorld()
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
+        }
+        isDataSetWorld = !isDataSetWorld
+        saveListOfTowns(isDataSetWorld)
+    }
+
+    private fun saveListOfTowns(isDataSetWorld: Boolean) {
+        activity?.let {
+            with(it.getPreferences(Context.MODE_PRIVATE).edit()) {
+                putBoolean(IS_WORLD_KEY, isDataSetWorld)
+                apply()
+            }
+        }
+    }
 
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
-               // binding.includedLoadingLayout.loading_layout.visibility = View.GONE
+                binding.includedLoadingLayout.loadingLayout.visibility = View.GONE
                 adapter.setWeather(appState.weatherData)
             }
             is AppState.Loading -> {
-                binding.includedLoadingLayout.loadingLayout.visibility = View.GONE
+                binding.includedLoadingLayout.loadingLayout.visibility = View.VISIBLE
             }
             is AppState.Error -> {
                 binding.includedLoadingLayout.loadingLayout.visibility = View.GONE
@@ -122,30 +142,13 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun checkPermission() {
-        activity?.let {
-            when {
-                ContextCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED -> {
-                    getLocation()
-                }
-                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                    showRationaleDialog()
-                }
-                else -> {
-                    requestPermission()
-                }
-            }
-        }
-    }
-
     private fun showRationaleDialog() {
         activity?.let {
             AlertDialog.Builder(it)
                 .setTitle(getString(R.string.dialog_rationale_title))
                 .setMessage(getString(R.string.dialog_rationale_meaasge))
                 .setPositiveButton(getString(R.string.dialog_rationale_give_access)) { _, _ ->
-                    requestPermission()
+                    requestSinglePermission.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
                 }
                 .setNegativeButton(getString(R.string.dialog_rationale_decline)) { dialog, _ -> dialog.dismiss() }
                 .create()
@@ -153,46 +156,36 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun requestPermission() {
-        requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_CODE
-        )
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
-    ) {
-        checkPermissionsResult(requestCode, grantResults)
-    }
-
-    private fun checkPermissionsResult(requestCode: Int, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_CODE -> {
-                var grantedPermissions = 0
-                if ((grantResults.isNotEmpty())) {
-                    for (i in grantResults) {
-                        if (i == PackageManager.PERMISSION_GRANTED) {
-                            grantedPermissions++
+    private var requestSinglePermission = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        repeat(permissions.entries.size) {
+            when (permissions.size) {
+                REQUEST_CODE -> {
+                    var grantedPermissions = 0
+                    if (permissions.isNotEmpty()) {
+                        for (i in permissions) {
+                            if (i == permissions) {
+                                grantedPermissions++
+                            }
                         }
-                    }
-                    if (grantResults.size == grantedPermissions) {
-                        getLocation()
+                        if (permissions.size == grantedPermissions) {
+                            getLocation()
+                        } else {
+                            showDialog(
+                                getString(R.string.dialog_title_no_gps),
+                                getString(R.string.dialog_message_no_gps)
+                            )
+                        }
                     } else {
                         showDialog(
                             getString(R.string.dialog_title_no_gps),
                             getString(R.string.dialog_message_no_gps)
                         )
                     }
-                } else {
-                    showDialog(
-                        getString(R.string.dialog_title_no_gps),
-                        getString(R.string.dialog_message_no_gps)
-                    )
+                    return@registerForActivityResult
                 }
-                return
             }
+
         }
     }
 
@@ -215,14 +208,13 @@ class MainFragment : Fragment() {
                 ) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
-                // Получить менеджер геолокаций
                 val locationManager =
                     context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    val provider = locationManager.getProvider(LocationManager.GPS_PROVIDER)
+                    val provider =
+                        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                     provider?.let {
-                        // Будем получать геоположение через каждые 60 секунд или каждые 100 метров
                         locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
                             REFRESH_PERIOD,
@@ -267,7 +259,7 @@ class MainFragment : Fragment() {
 
     private fun getAddressAsync(
         context: Context,
-        location: Location
+        location: Location,
     ) {
         val geoCoder = Geocoder(context)
         Thread {
@@ -312,8 +304,12 @@ class MainFragment : Fragment() {
         fun onItemViewClick(weather: Weather)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     companion object {
-        fun newInstance() =
-            MainFragment()
+        fun newInstance() = MainFragment()
     }
 }

@@ -1,15 +1,13 @@
 package com.example.weather.view
 
 import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.example.weather.GoogleMaps.GoogleMapsFragment
 import com.example.weather.R
 import com.example.weather.databinding.MainActivityBinding
-import com.example.weather.experiments.ContentProviderFragment
+import com.example.weather.maps.GoogleMapsFragment
 import com.example.weather.view.history.HistoryFragment
 import com.example.weather.view.main.MainFragment
 
@@ -27,7 +25,7 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, MainFragment.newInstance())
                 .commitAllowingStateLoss()
         }
-        registerReceiver(receiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        registerReceiver(receiver, IntentFilter("conn.CONNECTIVITY_CHANGE"))
     }
     override fun onDestroy() {
         unregisterReceiver(receiver)
@@ -40,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            /*R.id.menu_google_maps -> {
+            R.id.menu_google_maps -> {
                 supportFragmentManager.apply {
                     beginTransaction()
                         .add(R.id.container, GoogleMapsFragment())
@@ -48,20 +46,11 @@ class MainActivity : AppCompatActivity() {
                         .commitAllowingStateLoss()
                 }
                 true
-            }*/
+            }
             R.id.menu_history -> {
                 supportFragmentManager.apply {
                     beginTransaction()
                         .add(R.id.container, HistoryFragment.newInstance())
-                        .addToBackStack("")
-                        .commitAllowingStateLoss()
-                }
-                true
-            }
-            R.id.menu_content_provider -> {
-                supportFragmentManager.apply {
-                    beginTransaction()
-                        .add(R.id.container, ContentProviderFragment.newInstance())
                         .addToBackStack("")
                         .commitAllowingStateLoss()
                 }

@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -153,7 +154,7 @@ class MainFragment : Fragment() {
                     showRationaleDialog()
                 }
                 else -> {
-                    requestPermission()
+                    requestSinglePermission.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
                 }
             }
         }
@@ -165,7 +166,7 @@ class MainFragment : Fragment() {
                 .setTitle(getString(R.string.dialog_rationale_title))
                 .setMessage(getString(R.string.dialog_rationale_meaasge))
                 .setPositiveButton(getString(R.string.dialog_rationale_give_access)) { _, _ ->
-                    requestPermission()
+                    requestSinglePermission.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
                 }
                 .setNegativeButton(getString(R.string.dialog_rationale_decline)) { dialog, _ -> dialog.dismiss() }
                 .create()
@@ -173,47 +174,36 @@ class MainFragment : Fragment() {
         }
     }
 
-
-    private fun requestPermission() {
-        requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_CODE
-        )
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray,
-    ) {
-        checkPermissionsResult(requestCode, grantResults)
-    }
-
-    private fun checkPermissionsResult(requestCode: Int, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_CODE -> {
-                var grantedPermissions = 0
-                if ((grantResults.isNotEmpty())) {
-                    for (i in grantResults) {
-                        if (i == PackageManager.PERMISSION_GRANTED) {
-                            grantedPermissions++
+    private var requestSinglePermission = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        repeat(permissions.entries.size) {
+            when (permissions.size) {
+                REQUEST_CODE -> {
+                    var grantedPermissions = 0
+                    if (permissions.isNotEmpty()) {
+                        for (i in permissions) {
+                            if (i == permissions) {
+                                grantedPermissions++
+                            }
                         }
-                    }
-                    if (grantResults.size == grantedPermissions) {
-                        getLocation()
+                        if (permissions.size == grantedPermissions) {
+                            getLocation()
+                        } else {
+                            showDialog(
+                                getString(R.string.dialog_title_no_gps),
+                                getString(R.string.dialog_message_no_gps)
+                            )
+                        }
                     } else {
                         showDialog(
                             getString(R.string.dialog_title_no_gps),
                             getString(R.string.dialog_message_no_gps)
                         )
                     }
-                } else {
-                    showDialog(
-                        getString(R.string.dialog_title_no_gps),
-                        getString(R.string.dialog_message_no_gps)
-                    )
+                    return@registerForActivityResult
                 }
-                return
             }
+
         }
     }
 
@@ -240,9 +230,9 @@ class MainFragment : Fragment() {
                     context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    val provider = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                    val provider =
+                        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                     provider?.let {
-
                         locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
                             REFRESH_PERIOD,
